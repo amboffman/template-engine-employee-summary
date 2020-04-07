@@ -12,7 +12,137 @@ const render = require("./lib/htmlRenderer");
 
 
 // Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+const managerQuestions = [
+  {
+    type: "input",
+    name: "managerName",
+    message: "What is your manager's name?"
+  },
+  {
+    type: "input",
+    name: "managerID",
+    message: "What is your manager's id?"
+  },
+  {
+    type: "input",
+    name: "managerEmail",
+    message: "What is your manager's email?"
+  },
+  {
+    type: "input",
+    name: "managerOfficeNumber",
+    message: "What is your manager's office number?"
+  },
+  {
+    type: "list",
+    name: "teamAdd",
+    message: "Which type of team member would you like to add?",
+    choices: ["Engineer", "Intern", "I don't want to add any more team members"]
+  }
+];
+
+const internQuestions = [
+  {
+    type: "input",
+    name: "internName",
+    message: "What is your intern's name?"
+  },
+  {
+    type: "input",
+    name: "internID",
+    message: "What is your intern's id?"
+  },
+  {
+    type: "input",
+    name: "internEmail",
+    message: "What is your intern's email?"
+  },
+  {
+    type: "input",
+    name: "internSchool",
+    message: "What is your intern's school?"
+  },
+  {
+    type: "list",
+    name: "teamAdd",
+    message: "Which type of team member would you like to add?",
+    choices: ["Engineer", "Intern", "I don't want to add any more team members"]
+  }
+];
+
+const engineerQuestions = [
+  {
+    type: "input",
+    name: "engineerName",
+    message: "What is your engineer's name?"
+  },
+  {
+    type: "input",
+    name: "engineerID",
+    message: "What is your engineer's id?"
+  },
+  {
+    type: "input",
+    name: "engineerEmail",
+    message: "What is your engineer's email?"
+  },
+  {
+    type: "input",
+    name: "engineerGithub",
+    message: "What is your engineer's Github username?"
+  },
+  {
+    type: "list",
+    name: "teamAdd",
+    message: "Which type of team member would you like to add?",
+    choices: ["Engineer", "Intern", "I don't want to add any more team members"]
+  }
+];
+
+function managerInquiry() {
+  inquirer.prompt(managerQuestions)
+    .then(answers => {
+      // and to create objects for each team member (using the correct classes as blueprints!)
+      const manager = new Manager(answers.managerName, answers.managerID, answers.managerEmail, answers.managerOfficeNumber)
+      if (answers.teamAdd === "Engineer") {
+        engineerInquiry()
+      }
+      else if (answers.teamAdd === "Intern") {
+        internInquiry()
+      }
+    })
+    .catch(error => console.log(error));
+
+}
+
+function engineerInquiry() {
+  inquirer.prompt(engineerQuestions)
+    .then(answers => {
+      const engineer = new Engineer(answers.engineerName, answers.engineerID, answers.engineerEmail, answers.github)
+      if (answers.teamAdd === "Engineer") {
+        engineerInquiry()
+      }
+      else if (answers.teamAdd === "Intern") {
+        internInquiry()
+      }
+    })
+    .catch(error => console.log(error));
+}
+
+function internInquiry() {
+  inquirer.prompt(internQuestions)
+    .then(answers => {
+      const intern = new Intern(answers.internName, answers.inernID, answers.internEmail, answers.internSchool)
+      if (answers.teamAdd === "Engineer") {
+        engineerInquiry()
+      }
+      else if (answers.teamAdd === "Intern") {
+        internInquiry()
+      }
+    })
+    .catch(error => console.log(error));
+}
+managerInquiry();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
