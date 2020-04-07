@@ -10,6 +10,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const team = [];
+
 
 // Write code to use inquirer to gather information about the development team members,
 const managerQuestions = [
@@ -102,13 +104,22 @@ const engineerQuestions = [
 function managerInquiry() {
   inquirer.prompt(managerQuestions)
     .then(answers => {
-      // and to create objects for each team member (using the correct classes as blueprints!)
       const manager = new Manager(answers.managerName, answers.managerID, answers.managerEmail, answers.managerOfficeNumber)
+      team.push(manager);
       if (answers.teamAdd === "Engineer") {
         engineerInquiry()
       }
       else if (answers.teamAdd === "Intern") {
         internInquiry()
+      }
+      else {
+        const content = render(team);
+        fs.writeFile(outputPath, content, (error) => {
+          if (error) {
+            return console.log(error)
+          }
+          console.log("File created")
+        })
       }
     })
     .catch(error => console.log(error));
@@ -118,12 +129,22 @@ function managerInquiry() {
 function engineerInquiry() {
   inquirer.prompt(engineerQuestions)
     .then(answers => {
-      const engineer = new Engineer(answers.engineerName, answers.engineerID, answers.engineerEmail, answers.github)
+      const engineer = new Engineer(answers.engineerName, answers.engineerID, answers.engineerEmail, answers.engineerGithub)
+      team.push(engineer);
       if (answers.teamAdd === "Engineer") {
         engineerInquiry()
       }
       else if (answers.teamAdd === "Intern") {
         internInquiry()
+      }
+      else {
+        const content = render(team);
+        fs.writeFile(outputPath, content, (error) => {
+          if (error) {
+            return console.log(error)
+          }
+          console.log("File created")
+        })
       }
     })
     .catch(error => console.log(error));
@@ -132,12 +153,22 @@ function engineerInquiry() {
 function internInquiry() {
   inquirer.prompt(internQuestions)
     .then(answers => {
-      const intern = new Intern(answers.internName, answers.inernID, answers.internEmail, answers.internSchool)
+      const intern = new Intern(answers.internName, answers.internID, answers.internEmail, answers.internSchool)
+      team.push(intern);
       if (answers.teamAdd === "Engineer") {
         engineerInquiry()
       }
       else if (answers.teamAdd === "Intern") {
         internInquiry()
+      }
+      else {
+        const content = render(team);
+        fs.writeFile(outputPath, content, (error) => {
+          if (error) {
+            return console.log(error)
+          }
+          console.log("File created")
+        })
       }
     })
     .catch(error => console.log(error));
